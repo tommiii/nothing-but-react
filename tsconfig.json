@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["jest", "@types/node", "@testing-library/jest-dom"]
+  },
+  "include": ["./jest-setup.ts", "src/**/*"],
+  "exclude": ["node_modules"],
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
