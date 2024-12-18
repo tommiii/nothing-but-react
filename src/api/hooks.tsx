@@ -1,18 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { axiosInstance } from "./axios-instance";
 
-const useCustomQuery = () => {
+const useGetProjectsQuery = () => {
   const queryClient = useQueryClient();
 
   const cityQuery = useQuery({
-    queryKey: ["custom"],
+    queryKey: ["projects"],
     queryFn: async () => {
-      const url = "";
+      const url = "magazine/title?page=1&limit=20";
 
-      return axios
+      return axiosInstance
         .get(url)
         .then(({ data }) => {
-          queryClient.setQueryData(["custom"], data);
+          queryClient.setQueryData(["projects"], data);
           return data;
         })
         .catch((error) => {
@@ -28,7 +28,7 @@ const useCustomMutation = () => {
   const deleteCityMutation = useMutation({
     mutationFn: async () => {
       const url = "";
-      return axios
+      return axiosInstance
         .delete(url)
         .then(({ data }) => {
           return data;
@@ -42,4 +42,4 @@ const useCustomMutation = () => {
   return deleteCityMutation;
 };
 
-export { useCustomQuery, useCustomMutation };
+export { useGetProjectsQuery, useCustomMutation };
