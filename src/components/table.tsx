@@ -1,7 +1,10 @@
 import { FC } from "react";
 import styles from "./table.module.css";
+import Pagination from "./pagination";
+import PageSizeSelect from "./page-size-select";
+import debounce from "lodash.debounce";
 
-interface Data {
+export interface Data {
   id: string;
   name: string;
   created: string;
@@ -10,32 +13,73 @@ interface Data {
 }
 
 interface Props {
-  data: Data[];
+  data: Data[] | undefined;
   hideColumns?: string[];
+  extraCols?: { name: string; render?: JSX.Element }[];
+  dataCols: ({ displayName: string; propertyName: string } | string)[];
   columnsSearch?: string[] | "all";
+  filters: Record<string, string | number | undefined> | object;
+  onFilterChange: (
+    filters: Record<string, string | number | undefined> | object
+  ) => void;
+  itemsCount: number;
+  pagesCount: number;
+  currentPage: number;
+  pageSize: number;
 }
 
 const Table: FC<Props> = ({
-  data,
+  data = [],
   hideColumns = [],
-  // columnsSearch = "all",
+  extraCols = [],
+  dataCols,
+  onFilterChange = () => null,
+  pagesCount,
+  currentPage,
+  pageSize,
+  filters,
 }) => {
-  console.log(data);
-
-  console.log(import.meta.env);
-
-  const columnNames = Object.keys(data?.[0] || {});
+  // const columnNames = Object.keys(data?.[0] || {});
 
   return (
-    <>
+    <div className="flex flex-col">
       <table className={styles.tableClass}>
         <thead>
           <tr className={styles.trClass}>
-            {columnNames.map(
-              (columnName) =>
+            {dataCols.map((column) => {
+              const columnName =
+                typeof column === "string" ? column : column?.displayName;
+              const propertyName =
+                typeof column === "string" ? column : column?.propertyName;
+              const currentFilter = filters?.filter?.find(
+                (item) => item.field === propertyName
+              );
+              const currentOrder = filters?.["order-by"]?.find(
+                (item) => item.field === propertyName
+              )?.direction;
+              const sanitizedFilterValue = (currentFilter?.value || "")?.slice(
+                1,
+                -1
+              ); // remove %%
+
+              console.log({ currentOrder, propertyName });
+              return (
                 !hideColumns.includes(columnName) && (
                   <th key={columnName} className={styles.thClass}>
-                    <button>
+                    <button
+                      onClick={() => {
+                        onFilterChange({
+                          "order-by": [
+                            {
+                              field: propertyName,
+                              type: "field",
+                              direction:
+                                currentOrder === "ASC" ? "DESC" : "ASC",
+                            },
+                          ],
+                        });
+                      }}
+                    >
                       <span className="flex items-center capitalize">
                         {columnName}
                         <svg
@@ -61,41 +105,76 @@ const Table: FC<Props> = ({
                       className={styles.inputClass}
                       id={columnName}
                       type="text"
+                      defaultValue={sanitizedFilterValue}
+                      onChange={debounce((e) => {
+                        onFilterChange({
+                          filter: [
+                            {
+                              field: columnName,
+                              type: "like",
+                              value: `%${e.target.value}%`,
+                            },
+                          ],
+                        });
+                      }, 1000)}
                     />
                   </th>
                 )
-            )}
+              );
+            })}
+            {extraCols.map((extraCol) => (
+              <th key={extraCol.name} className={styles.thClass}>
+                <span className="flex items-center capitalize">
+                  {extraCol.name}
+                </span>
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {data?.map(({ id, name, created, modified }) => (
-            <tr key={id} className={styles.trClass}>
-              <td className={styles.tdClass}>{name}</td>
-              <td className={styles.tdClass}>{created}</td>
-              <td className={styles.tdClass}>{modified}</td>
+          {data?.map((item, index) => (
+            <tr key={index} className={styles.trClass}>
+              {dataCols.map((column, index) => {
+                const columnName =
+                  typeof column === "string" ? column : column?.displayName;
+                const propertyValue =
+                  typeof column === "string" ? column : column?.propertyName;
+                return (
+                  !hideColumns.includes(columnName) && (
+                    <td key={index} className={styles.tdClass}>
+                      {item[`${propertyValue}`]}
+                    </td>
+                  )
+                );
+              })}
+              {extraCols.map((extraCol) => (
+                <th key={extraCol.name} className={styles.thClass}>
+                  <span className="flex items-center capitalize">
+                    {extraCol?.render(item.id)}
+                  </span>
+                </th>
+              ))}
             </tr>
           ))}
         </tbody>
       </table>
-      <div>
-        <label
-          htmlFor="entries"
-          className="block mb-2 text-sm font-medium text-gray-900"
-        >
-          Entries per page
-        </label>
-        <select
-          id="entries"
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring mt-2"
-        >
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-          <option value="25">25</option>
-        </select>
+      <div className="flex justify-between">
+        <PageSizeSelect
+          key={pageSize}
+          pageSize={pageSize}
+          onChange={(newLimit) => {
+            onFilterChange({ limit: newLimit });
+          }}
+        />
+        <Pagination
+          pagesCount={pagesCount}
+          currentPage={currentPage}
+          onChange={(newPage) => {
+            onFilterChange({ page: newPage });
+          }}
+        />
       </div>
-    </>
+    </div>
   );
 };
 
