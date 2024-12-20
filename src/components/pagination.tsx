@@ -5,36 +5,44 @@ interface Props {
   currentPage: number;
   pagesCount: number;
   onChange: (newPage: number) => void;
+  className?: string;
 }
 
-const Pagination: FC<Props> = ({ currentPage, pagesCount, onChange }) => {
+const Pagination: FC<Props> = ({
+  currentPage,
+  pagesCount,
+  className,
+  onChange,
+}) => {
   const disableNextPage = currentPage === pagesCount;
   const disablePreviousPage = currentPage === 1;
 
   return (
-    <>
+    <div className={className}>
       <div className="inline-flex">
         <button
-          disabled={disablePreviousPage}
           className={classNames(
-            "bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded",
+            "bg-primary hover:bg-tertiary text-white font-bold py-2 px-4 rounded-full",
             { "cursor-not-allowed": disablePreviousPage }
           )}
+          disabled={disablePreviousPage}
           onClick={() => {
             onChange(currentPage - 1);
           }}
         >
           Prev
         </button>
-        <p className="text-gray-500 my-auto mx-2">
+
+        <p className="font-medium text-gray-500 my-auto mx-2">
           Page {currentPage} of {pagesCount}
         </p>
+
         <button
-          disabled={disableNextPage}
           className={classNames(
-            "bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded",
+            "bg-primary hover:bg-tertiary text-white font-bold py-2 px-4 rounded-full",
             { "cursor-not-allowed": disableNextPage }
           )}
+          disabled={disableNextPage}
           onClick={() => {
             onChange(currentPage + 1);
           }}
@@ -42,7 +50,7 @@ const Pagination: FC<Props> = ({ currentPage, pagesCount, onChange }) => {
           Next
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

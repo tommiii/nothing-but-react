@@ -26,8 +26,6 @@ const getUrlWithQueryParameters = ({
 
   const parsed = qs.stringify(queryParameters as Record<string, any>);
 
-  console.log(parsed, qs.parse(parsed));
-
   if (parsed !== "") {
     return baseUrl + "?" + parsed;
   }
