@@ -1,26 +1,27 @@
-import { FC } from "react";
+import { FC, ChangeEvent, InputHTMLAttributes } from "react";
 
-interface Props {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  defaultValue?: string | number;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
 }
 
 const Input: FC<Props> = ({
   placeholder,
-  defaultValue,
   onChange,
   className,
+  value,
+  ...props
 }) => {
   return (
     <div className={className}>
       <input
-        defaultValue={defaultValue}
+        value={value}
+        onChange={onChange}
         className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:ring"
         type="text"
         placeholder={placeholder}
-        onChange={onChange}
+        {...props}
       />
     </div>
   );

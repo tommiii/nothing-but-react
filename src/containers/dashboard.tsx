@@ -1,18 +1,20 @@
 import { FC, useState } from "react";
-import { useGetPublicationsQuery, useGetPublicationQuery } from "../api/hooks";
-import "react-responsive-modal/styles.css";
-import { Modal } from "react-responsive-modal";
 import ReactJson from "react-json-view";
-import Grid from "../components/grid";
+import { Modal } from "react-responsive-modal";
 import debounce from "lodash.debounce";
-import Select from "../components/select";
+import { useGetPublicationsQuery, useGetPublicationQuery } from "../api/hooks";
 import { entriesPerPageOptions } from "../constants";
-import Input from "../components/input";
-import logo from "../assets/logo.png";
-import Pagination from "../components/pagination";
 import { APIData, APIFilters, Publication } from "../types";
-import Filters from "../components/filters";
-import OrdersBy from "../components/orders-by";
+import {
+  Grid,
+  Select,
+  Input,
+  Pagination,
+  Filters,
+  OrdersBy,
+} from "../components";
+import logo from "../assets/logo.png";
+import "react-responsive-modal/styles.css";
 
 const Dashboard: FC = () => {
   const [APIFilters, setAPIFilters] = useState<APIFilters>({

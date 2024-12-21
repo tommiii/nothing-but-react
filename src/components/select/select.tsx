@@ -1,7 +1,12 @@
 import { FC } from "react";
 
+interface Option {
+  value: string | number;
+  displayValue: string;
+}
+
 interface Props {
-  options: { value: string | number; displayValue: string }[];
+  options: Option[];
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   defaultValue?: string | number;
   label?: string;
@@ -29,11 +34,7 @@ const Select: FC<Props> = ({
         defaultValue={defaultValue}
       >
         {options.map((option) => (
-          <option
-            key={option.value}
-            disabled={option.value === "placeholder"}
-            value={option.value}
-          >
+          <option key={option.value} value={option.value}>
             {option.displayValue}
           </option>
         ))}
