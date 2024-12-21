@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import Select from "../select";
+import Select from "./select";
 
 const options = [
   { value: "1", displayValue: "Option 1" },
