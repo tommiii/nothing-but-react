@@ -1,6 +1,7 @@
 import { FC } from "react";
 import classNames from "classnames";
 import { Publication } from "../types";
+import Button from "./button";
 
 interface Props {
   list: Publication[] | undefined;
@@ -12,6 +13,7 @@ const Grid: FC<Props> = ({ list = [], onClick }) => {
     <div className="flex flex-col">
       {list.map((item, index) => (
         <div
+          key={item.id}
           className={classNames(
             "grid grid-cols-4 gap-4 border border-l-8 border-l-secondary shadow-xl rounded-lg p-3 text-sm first-mt-5",
             { "mt-5": index > 0 }
@@ -44,14 +46,13 @@ const Grid: FC<Props> = ({ list = [], onClick }) => {
             </span>
           </div>
           <div className="text-center">
-            <button
+            <Button
               onClick={() => {
                 onClick(item.id);
               }}
-              className="bg-primary hover:bg-tertiary text-white font-bold py-2 px-4 rounded-full"
             >
               View
-            </button>
+            </Button>
           </div>
           <div>
             <span className="font-semibold">Modified:</span> {item.modified_on}

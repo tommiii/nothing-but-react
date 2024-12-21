@@ -2,6 +2,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "./axios-instance";
 import qs from "qs";
+import { APIFilters } from "../types";
 
 interface Options<ResponseType = any, RequestType = any, ErrorType = any> {
   onSuccess?: (responseData: ResponseType, requestData?: RequestType) => void;
@@ -14,7 +15,7 @@ const getUrlWithQueryParameters = ({
   queryParameters,
 }: {
   baseUrl: string;
-  queryParameters?: Record<string, string | number | undefined>;
+  queryParameters?: APIFilters;
 }): string => {
   if (!baseUrl || typeof baseUrl !== "string") {
     throw new Error(
@@ -24,26 +25,26 @@ const getUrlWithQueryParameters = ({
     );
   }
 
-  const parsed = qs.stringify(queryParameters as Record<string, any>);
+  const stringified = qs.stringify(queryParameters as Record<string, any>);
 
-  if (parsed !== "") {
-    return baseUrl + "?" + parsed;
+  if (stringified !== "") {
+    return baseUrl + "?" + stringified;
   }
   return baseUrl;
 };
 
 const useGetPublicationsQuery = (
-  filters?: Record<string, string | number | undefined>,
+  APIfilters?: APIFilters,
   options?: Options
 ) => {
   const queryClient = useQueryClient();
 
   const query = useQuery({
-    queryKey: ["publications", { filters }],
+    queryKey: ["publications", { APIfilters }],
     queryFn: async () => {
       const url = getUrlWithQueryParameters({
         baseUrl: "magazine/edition",
-        queryParameters: filters,
+        queryParameters: APIfilters,
       });
 
       return axiosInstance

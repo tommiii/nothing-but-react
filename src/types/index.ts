@@ -6,3 +6,28 @@ export interface Publication {
   category?: string;
   status?: string;
 }
+
+export type Filter = { field: string; value: string; type?: string };
+
+export type Direction = "ASC" | "DESC";
+
+export type OrderBy = {
+  field: string;
+  type: "field";
+  direction: "ASC" | "DESC";
+};
+
+export interface APIData {
+  itemsCount: number;
+  pagesCount: number;
+  currentPage: number;
+  pageSize: number;
+  publications: Publication[];
+}
+
+export type APIFilters = {
+  page: number;
+  limit: number;
+  filter?: Filter[];
+  "order-by"?: OrderBy[];
+};

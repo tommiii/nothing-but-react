@@ -6,35 +6,38 @@ import ReactJson from "react-json-view";
 import Grid from "../components/grid";
 import debounce from "lodash.debounce";
 import Select from "../components/select";
-import {
-  entriesPerPageOptions,
-  filtersOptions,
-  orderByOptions,
-} from "../constants";
+import { entriesPerPageOptions } from "../constants";
 import Input from "../components/input";
 import logo from "../assets/logo.png";
 import Pagination from "../components/pagination";
-import { Publication } from "../types";
+import { APIData, APIFilters, Publication } from "../types";
+import Filters from "../components/filters";
+import OrdersBy from "../components/orders-by";
 
 const Dashboard: FC = () => {
-  const [APIFilters, setAPIFilters] = useState({ page: 1, limit: 5 });
-  const [filterDraft, setFilterDraft] = useState<{
-    name: string;
-    value: string;
-  }>({ name: filtersOptions[0].value, value: "" });
+  const [APIFilters, setAPIFilters] = useState<APIFilters>({
+    page: 1,
+    limit: 5,
+  });
+
+  console.log({ APIFilters });
+
   const [currentPublicationId, setCurrentPublicationId] = useState<string>();
   const [isOpen, setModalOpen] = useState(false);
-  const [publicationList, setPublicationList] = useState<Publication[]>();
+  const [APIData, setAPIData] = useState<APIData>();
 
-  const {
-    data: publicationsData,
-    error: publicationsError,
-    isLoading: loadingPublications,
-  } = useGetPublicationsQuery(APIFilters, {
-    onSuccess: (data) => {
-      setPublicationList(data?._embedded?.edition);
-    },
-  });
+  const { error: publicationsError, isLoading: loadingPublications } =
+    useGetPublicationsQuery(APIFilters, {
+      onSuccess: (data) => {
+        setAPIData({
+          publications: data?._embedded?.edition as Publication[],
+          itemsCount: data?.total_items,
+          pagesCount: data?.page_count,
+          currentPage: data?.page,
+          pageSize: data?.page_size,
+        });
+      },
+    });
   const {
     data: publicationData,
     error: publicationError,
@@ -46,11 +49,6 @@ const Dashboard: FC = () => {
     disabled: !currentPublicationId,
   });
 
-  // const itemsCount = publicationsData?.total_items;
-  const pagesCount = publicationsData?.page_count;
-  const currentPage = publicationsData?.page;
-  const pageSize = publicationsData?.page_size;
-
   if (publicationsError || publicationError) {
     return <>Something went wrong loading the data. Try again</>;
   }
@@ -59,7 +57,7 @@ const Dashboard: FC = () => {
 
   return (
     <>
-      <header className="App-header">
+      <header className="flex bg-white">
         <img
           width="100px"
           height="90px"
@@ -67,8 +65,11 @@ const Dashboard: FC = () => {
           alt="Logo"
           className="App-logo"
         />
+        <span className="my-auto ml-3 font-medium text-gray-500">
+          Publications Dashboard
+        </span>
       </header>
-      <div className="flex flex-col bg-gray-100 p-5">
+      <div className="flex flex-col  p-5">
         <div className="rounded-xl p-5">
           <div className="text-gray-500 text-2xl ">
             {isLoading && "(loading data...)"}
@@ -90,101 +91,103 @@ const Dashboard: FC = () => {
                 }));
               }, 1000)}
             />
-            <div className="mt-5 flex flex-col">
-              <Select
-                options={entriesPerPageOptions}
-                label="Entries per page:"
-                defaultValue={pageSize}
-                onChange={(e) => {
+
+            <div className="flex">
+              <Filters
+                className="mt-5 w-full"
+                onFilterAdd={({ value, field }) => {
                   setAPIFilters((prev) => ({
                     ...prev,
-                    limit: Number(e.target.value),
+                    filter: [
+                      ...(prev.filter || []),
+                      {
+                        field,
+                        type: "like",
+                        value: `%${value}%`,
+                      },
+                    ],
                   }));
                 }}
+                onFilterRemove={({ value, field }) => {
+                  setAPIFilters((prev) => ({
+                    ...prev,
+                    filter: prev.filter?.filter(
+                      (item) => item.value !== value || item.field !== field
+                    ),
+                  }));
+                }}
+                filtersApplied={APIFilters.filter}
               />
-              <div className="flex">
-                <Select
-                  className="mt-5"
-                  options={filtersOptions}
-                  label="Select filter:"
-                  defaultValue={filterDraft.name}
-                  onChange={(e) => {
-                    setFilterDraft((prev) => ({
-                      ...prev,
-                      name: e.target.value,
-                    }));
-                  }}
-                />
-                <Input
-                  className="mt-auto ml-3"
-                  placeholder="filter value..."
-                  onChange={debounce((e) => {
-                    setAPIFilters((prev) => ({
-                      ...prev,
-                      filter: [
-                        {
-                          field: filterDraft.name,
-                          type: "like",
-                          value: `%${e.target.value}%`,
-                        },
-                      ],
-                    }));
-                  }, 1000)}
-                />
-              </div>
-              <div className="flex">
-                <Select
-                  className="mt-5"
-                  options={filtersOptions}
-                  label="Order by:"
-                  defaultValue={filterDraft.name}
-                  onChange={(e) => {
-                    setFilterDraft((prev) => ({
-                      ...prev,
-                      name: e.target.value,
-                    }));
-                  }}
-                />
-                <Select
-                  className="mt-5 ml-3"
-                  options={orderByOptions}
-                  label="direction:"
-                  defaultValue={filterDraft.value}
-                  onChange={(e) => {
-                    setAPIFilters((prev) => ({
-                      ...prev,
-                      "order-by": [
-                        {
-                          field: filterDraft.name,
-                          type: "field",
-                          direction: e.target.value,
-                        },
-                      ],
-                    }));
-                  }}
-                />
-              </div>
+            </div>
+            <div className="flex">
+              <OrdersBy
+                className="mt-5 w-full"
+                onOrderByAdd={({ field, direction }) => {
+                  setAPIFilters((prev) => ({
+                    ...prev,
+                    "order-by": [
+                      ...(prev?.["order-by"] || []),
+                      {
+                        field,
+                        type: "field",
+                        direction,
+                      },
+                    ],
+                  }));
+                }}
+                onOrderByRemove={({ direction, field }) => {
+                  setAPIFilters((prev) => ({
+                    ...prev,
+                    "order-by": prev?.[`order-by`]?.filter(
+                      (item) =>
+                        item.field !== field || item.direction !== direction
+                    ),
+                  }));
+                }}
+                ordersByApplied={APIFilters?.["order-by"]}
+              />
             </div>
           </div>
           <div className="rounded-lg mt-5 bg-white flex flex-col p-5">
             <Grid
-              list={publicationList}
+              list={APIData?.publications}
               onClick={(id) => {
-                setCurrentPublicationId(id);
+                if (currentPublicationId === id) {
+                  setModalOpen(true);
+                } else {
+                  setCurrentPublicationId(id);
+                }
               }}
             />
-            <Pagination
-              className="ml-auto mt-5"
-              key={`${currentPage}-${pagesCount}`}
-              pagesCount={pagesCount}
-              currentPage={currentPage}
-              onChange={(newPage) => {
-                setAPIFilters((prev) => ({
-                  ...prev,
-                  page: newPage,
-                }));
-              }}
-            />
+            <div className="mt-5 flex justify-between">
+              <div className="flex">
+                <Select
+                  options={entriesPerPageOptions}
+                  label="Entries per page:"
+                  defaultValue={APIData?.pageSize}
+                  onChange={(e) => {
+                    setAPIFilters((prev) => ({
+                      ...prev,
+                      limit: Number(e.target.value),
+                    }));
+                  }}
+                />
+                <span className="my-auto ml-3 font-medium text-gray-500">
+                  of {APIData?.itemsCount} items
+                </span>
+              </div>
+              <Pagination
+                key={`${APIData?.currentPage}-${APIData?.pagesCount}`}
+                pagesCount={APIData?.pagesCount}
+                currentPage={APIData?.currentPage}
+                onChange={(newPage) => {
+                  setAPIFilters((prev) => ({
+                    ...prev,
+                    page: newPage,
+                  }));
+                }}
+              />
+            </div>
           </div>
           <Modal
             open={isOpen}

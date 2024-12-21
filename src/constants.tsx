@@ -7,6 +7,7 @@ export const entriesPerPageOptions = [
 ];
 
 export const filtersOptions = [
+  { value: "placeholder", displayValue: "Select a category" },
   { value: "status", displayValue: "Status" },
   { value: "category", displayValue: "Category" },
   { value: "created_on", displayValue: "Created" },
@@ -14,6 +15,11 @@ export const filtersOptions = [
 ];
 
 export const orderByOptions = [
+  ...filtersOptions,
+  { value: "name", displayValue: "Name" },
+];
+
+export const orderByDirectionOptions = [
   { value: "ASC", displayValue: "ASC" },
   { value: "DESC", displayValue: "DESC" },
 ];

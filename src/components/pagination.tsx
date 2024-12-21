@@ -1,15 +1,15 @@
 import { FC } from "react";
-import classNames from "classnames";
+import Button from "./button";
 
 interface Props {
-  currentPage: number;
-  pagesCount: number;
+  currentPage?: number;
+  pagesCount?: number;
   onChange: (newPage: number) => void;
   className?: string;
 }
 
 const Pagination: FC<Props> = ({
-  currentPage,
+  currentPage = 1,
   pagesCount,
   className,
   onChange,
@@ -20,35 +20,27 @@ const Pagination: FC<Props> = ({
   return (
     <div className={className}>
       <div className="inline-flex">
-        <button
-          className={classNames(
-            "bg-primary hover:bg-tertiary text-white font-bold py-2 px-4 rounded-full",
-            { "cursor-not-allowed": disablePreviousPage }
-          )}
+        <Button
           disabled={disablePreviousPage}
           onClick={() => {
             onChange(currentPage - 1);
           }}
         >
           Prev
-        </button>
+        </Button>
 
         <p className="font-medium text-gray-500 my-auto mx-2">
           Page {currentPage} of {pagesCount}
         </p>
 
-        <button
-          className={classNames(
-            "bg-primary hover:bg-tertiary text-white font-bold py-2 px-4 rounded-full",
-            { "cursor-not-allowed": disableNextPage }
-          )}
+        <Button
           disabled={disableNextPage}
           onClick={() => {
             onChange(currentPage + 1);
           }}
         >
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );
