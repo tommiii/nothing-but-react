@@ -74,6 +74,7 @@ const OrdersBy: FC<Props> = ({
     <div className={className}>
       <div className="flex flex-wrap">
         <Select
+          id="select-order-by-id"
           className="w-full sm:w-auto"
           options={filteredOrderByOptions}
           label="Select order by:"
@@ -82,6 +83,7 @@ const OrdersBy: FC<Props> = ({
           aria-label="Select field to order by"
         />
         <Select
+          id="select-direction-id"
           className="w-full sm:w-auto sm:ml-3 sm:mt-0 mt-3"
           options={orderByDirectionOptions}
           label="Direction:"

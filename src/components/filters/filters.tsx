@@ -67,6 +67,8 @@ const Filters: FC<Props> = ({
     <div className={className}>
       <div className="flex flex-wrap">
         <Select
+          id="select-filters-id"
+          data-testid="select-filters-test-id"
           className="w-full sm:w-auto"
           options={filtersOptions.filter(
             (filterOption) =>
@@ -77,6 +79,8 @@ const Filters: FC<Props> = ({
           onChange={handleFieldChange}
         />
         <Input
+          id="input-filters-id"
+          data-testid="input-filters-test-id"
           className="w-full sm:w-auto sm:ml-3 sm:mt-0 mt-3"
           placeholder="Filter value..."
           value={filterDraft.value}

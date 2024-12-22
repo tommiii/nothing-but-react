@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import Grid from "./grid";
 
 describe("Grid component", () => {
@@ -44,15 +44,14 @@ describe("Grid component", () => {
     );
   });
 
-  // TODO
-  // it("should click 'View' button and trigger onClick with correct id", () => {
-  //   render(<Grid list={publications} onClick={mockOnClick} />);
+  it("should click 'View' button and trigger onClick with correct id", () => {
+    render(<Grid list={publications} onClick={mockOnClick} />);
 
-  //   publications.forEach((publication) => {
-  //     fireEvent.click(screen.getByTestId(`button-${publication.id}`));
-  //     expect(mockOnClick).toHaveBeenCalledWith(publication.id);
-  //   });
-  // });
+    publications.forEach((publication) => {
+      fireEvent.click(screen.getByTestId(`button-${publication.id}`));
+      expect(mockOnClick).toHaveBeenCalledWith(publication.id);
+    });
+  });
 
   it("should render N/A for missing status or category", () => {
     const publicationsWithMissingData = [

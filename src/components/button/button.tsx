@@ -7,6 +7,7 @@ interface ButtonProps {
   disabled?: boolean;
   children: React.ReactNode;
   ariaLabel?: string;
+  id?: string;
 }
 
 const Button: FC<ButtonProps> = ({
@@ -15,6 +16,7 @@ const Button: FC<ButtonProps> = ({
   disabled = false,
   children,
   ariaLabel,
+  id,
 }) => {
   const buttonClassNames = classNames(
     "bg-primary hover:bg-tertiary text-white font-bold py-2 px-4 rounded-full",
@@ -26,6 +28,7 @@ const Button: FC<ButtonProps> = ({
 
   return (
     <button
+      data-testid={`button-${id}`}
       className={buttonClassNames}
       onClick={disabled ? undefined : onClick}
       disabled={disabled}

@@ -12,6 +12,10 @@ describe("OrdersBy Component", () => {
     mockOnOrderByRemove.mockClear();
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("should render", () => {
     render(
       <OrdersBy

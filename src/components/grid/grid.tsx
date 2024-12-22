@@ -28,7 +28,8 @@ const Grid: FC<Props> = ({ list = [], onClick }) => {
     [onClick]
   );
 
-  if (!list?.length) return <p>No publications available.</p>;
+  if (!list?.length)
+    return <p className="text-center">No publications available.</p>;
 
   return (
     <div className="flex flex-col space-y-4">
@@ -54,6 +55,7 @@ const Grid: FC<Props> = ({ list = [], onClick }) => {
           </div>
           <div className="ml-auto row-span-2 my-auto">
             <Button
+              id={item.id}
               aria-label={`View publication ${item.name || "Unnamed"}`}
               onClick={() => handleClick(item.id)}
             >

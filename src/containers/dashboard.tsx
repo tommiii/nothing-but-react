@@ -23,12 +23,13 @@ const Dashboard: FC = () => {
     limit: 5,
   });
   const [currentPublicationId, setCurrentPublicationId] = useState<string>();
-  const [isOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
   const [APIData, setAPIData] = useState<APIData>();
 
   const { error: publicationsError, isLoading: loadingPublications } =
     useGetPublicationsQuery(APIFilters, {
       onSuccess: (data) => {
+        //TODO check data when 0
         setAPIData({
           publications: data?._embedded?.edition as Publication[],
           itemsCount: data?.total_items,
@@ -191,12 +192,17 @@ const Dashboard: FC = () => {
             <Grid
               list={APIData?.publications}
               onClick={(id) => {
-                setCurrentPublicationId((prev) => (prev === id ? "" : id));
+                if (currentPublicationId === id) {
+                  setModalOpen(true);
+                } else {
+                  setCurrentPublicationId(id);
+                }
               }}
             />
             <div className="mt-5 flex justify-between items-center">
               <div className="flex items-center">
                 <Select
+                  id="entries-per-page-select"
                   options={entriesPerPageOptions}
                   label="Entries per page:"
                   defaultValue={String(APIData?.pageSize)}
@@ -214,8 +220,7 @@ const Dashboard: FC = () => {
               />
             </div>
           </div>
-
-          <Modal open={isOpen} onClose={() => setModalOpen(false)} center>
+          <Modal open={isModalOpen} onClose={() => setModalOpen(false)} center>
             <ReactJson src={publicationData} />
           </Modal>
         </div>
