@@ -14,6 +14,12 @@ export const filtersOptions = [
   { value: "modified_on", displayValue: "Modified" },
 ];
 
+export const filterTypeOptions = [
+  { value: "placeholder", displayValue: "Select a type" },
+  { value: "like", displayValue: "Like/Contain" },
+  { value: "eq", displayValue: "Equal" },
+];
+
 export const orderByOptions = [
   ...filtersOptions,
   { value: "name", displayValue: "Name" },

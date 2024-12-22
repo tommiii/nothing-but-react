@@ -52,14 +52,15 @@ const Dashboard: FC = () => {
   const isLoading = loadingPublications || loadingPublication;
 
   const handleFilterAdd = useCallback((filter: Filter) => {
+    const value = filter.type === "like" ? `%${filter.value}%` : filter.value;
     setAPIFilters((prev) => ({
       ...prev,
       filter: [
         ...(prev.filter || []),
         {
           field: filter.field,
-          type: "like",
-          value: `%${filter.value}%`,
+          type: filter.type,
+          value,
         },
       ],
     }));

@@ -7,7 +7,7 @@ export interface Publication {
   status?: string;
 }
 
-export type Filter = { field: string; value: string; type?: string };
+export type Filter = { field: string; value: string; type: "like" | "eq" };
 
 export type Direction = "ASC" | "DESC";
 
