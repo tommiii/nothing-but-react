@@ -3,7 +3,7 @@ import ReactJson from "react-json-view";
 import { Modal } from "react-responsive-modal";
 import { useGetPublicationsQuery, useGetPublicationQuery } from "../api/hooks";
 import { entriesPerPageOptions } from "../constants";
-import { APIData, APIFilters, Direction, Publication } from "../types";
+import { APIData, APIFilters, Direction, Filter, Publication } from "../types";
 import {
   Grid,
   Select,
@@ -51,22 +51,28 @@ const Dashboard: FC = () => {
 
   const isLoading = loadingPublications || loadingPublication;
 
-  const handleFilterChange = useCallback(
-    (filter: { field: string; value: string }) => {
-      setAPIFilters((prev) => ({
-        ...prev,
-        filter: [
-          ...(prev.filter || []),
-          {
-            field: filter.field,
-            type: "like",
-            value: `%${filter.value}%`,
-          },
-        ],
-      }));
-    },
-    []
-  );
+  const handleFilterAdd = useCallback((filter: Filter) => {
+    setAPIFilters((prev) => ({
+      ...prev,
+      filter: [
+        ...(prev.filter || []),
+        {
+          field: filter.field,
+          type: "like",
+          value: `%${filter.value}%`,
+        },
+      ],
+    }));
+  }, []);
+
+  const handleFilterRemove = useCallback((filter: Filter) => {
+    setAPIFilters((prev) => ({
+      ...prev,
+      filter: prev.filter?.filter(
+        (item) => item.value !== filter.value || item.field !== filter.field
+      ),
+    }));
+  }, []);
 
   const handleOrderByChange = useCallback(
     (orderBy: { field: string; direction: string }) => {
@@ -157,17 +163,8 @@ const Dashboard: FC = () => {
 
             <Filters
               className="mt-5"
-              onFilterAdd={handleFilterChange}
-              onFilterRemove={(removed) => {
-                setAPIFilters((prev) => ({
-                  ...prev,
-                  filter: prev.filter?.filter(
-                    (item) =>
-                      item.value !== removed.value ||
-                      item.field !== removed.field
-                  ),
-                }));
-              }}
+              onFilterAdd={handleFilterAdd}
+              onFilterRemove={handleFilterRemove}
               filtersApplied={currentAPIFilters}
             />
 

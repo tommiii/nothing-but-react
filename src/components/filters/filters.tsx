@@ -87,6 +87,8 @@ const Filters: FC<Props> = ({
           onChange={handleValueChange}
         />
         <Button
+          id="apply-filter-button"
+          data-testid="apply-filter-button-test-id"
           className="w-full sm:w-auto ml-auto sm:mt-0 mt-3"
           disabled={
             !filterDraft.value ||

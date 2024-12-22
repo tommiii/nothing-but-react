@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { ButtonHTMLAttributes, FC } from "react";
 import classNames from "classnames";
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
   disabled?: boolean;
@@ -17,6 +17,7 @@ const Button: FC<ButtonProps> = ({
   children,
   ariaLabel,
   id,
+  ...props
 }) => {
   const buttonClassNames = classNames(
     "bg-primary hover:bg-tertiary text-white font-bold py-2 px-4 rounded-full",
@@ -34,6 +35,7 @@ const Button: FC<ButtonProps> = ({
       disabled={disabled}
       aria-label={ariaLabel}
       aria-disabled={disabled}
+      {...props}
     >
       {children}
     </button>

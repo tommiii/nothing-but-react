@@ -135,33 +135,25 @@ describe("Dashboard Component", () => {
     expect(screen.getByTestId("modal")).toBeInTheDocument();
   });
 
-  //TODO
-  // it("should update the API filters when a filter is added", async () => {
-  //   render(<Dashboard />);
+  it("should update the API filters when a filter is added", async () => {
+    render(<Dashboard />);
 
-  //   const mockSetAPIFilters = jest.fn();
-  //   // mockGetPublications.mockImplementationOnce(() => ({
-  //   //   data: mockPublicationsData,
-  //   //   isLoading: false,
-  //   //   error: null,
-  //   // }));
+    const select = screen.getByLabelText(/select filter/i);
+    const input = screen.getByPlaceholderText(/filter value/i);
+    const applyButton = screen.getByTestId("apply-filter-button-test-id");
 
-  //   fireEvent.change(screen.getByTestId("select-filters-test-id"), {
-  //     target: { value: "Status" },
-  //   });
+    fireEvent.change(select, { target: { value: "status" } });
+    fireEvent.change(input, { target: { value: "Draft" } });
+    fireEvent.click(applyButton);
 
-  //   fireEvent.change(screen.getByTestId("filter-test-id"), {
-  //     target: { value: "Draft" },
-  //   });
-
-  //   await waitFor(() =>
-  //     expect(mockSetAPIFilters).toHaveBeenCalledWith({
-  //       page: 1,
-  //       limit: 5,
-  //       filter: [{ field: "status", type: "like", value: "%Draft%" }],
-  //     })
-  //   );
-  // });
+    expect(mockGetPublications.mock.calls[2][0]).toEqual(
+      expect.objectContaining({
+        page: 1,
+        limit: 5,
+        filter: [{ field: "status", type: "like", value: "%Draft%" }],
+      })
+    );
+  });
 
   it("should handle pagination correctly", async () => {
     render(<Dashboard />);
