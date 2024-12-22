@@ -28,19 +28,18 @@ describe("OrdersBy Component", () => {
     expect(screen.getByRole("button", { name: /apply/i })).toBeInTheDocument();
   });
 
-  // TODO
-  // it("should initialize with the first field and direction", () => {
-  //   render(
-  //     <OrdersBy
-  //       onOrderByAdd={mockOnOrderByAdd}
-  //       onOrderByRemove={mockOnOrderByRemove}
-  //     />
-  //   );
-  //   expect(screen.getByLabelText("Select order by:")).toHaveValue(
-  //     orderByOptions[0].value
-  //   );
-  //   expect(screen.getByLabelText("Direction:")).toHaveValue("ASC");
-  // });
+  it("should initialize with the first field and direction", () => {
+    render(
+      <OrdersBy
+        onOrderByAdd={mockOnOrderByAdd}
+        onOrderByRemove={mockOnOrderByRemove}
+      />
+    );
+    expect(screen.getByLabelText("Select order by:")).toHaveValue(
+      orderByOptions[0].value
+    );
+    expect(screen.getByLabelText("Direction:")).toHaveValue("ASC");
+  });
 
   it("should update draft state when selecting a field", () => {
     render(
@@ -57,46 +56,44 @@ describe("OrdersBy Component", () => {
     expect(selectField).toHaveValue(orderByOptions[1].value);
   });
 
-  // TODO
-  // it("should update draft direction when selecting a direction", () => {
-  //   render(
-  //     <OrdersBy
-  //       onOrderByAdd={mockOnOrderByAdd}
-  //       onOrderByRemove={mockOnOrderByRemove}
-  //     />
-  //   );
-  //   const selectDirection = screen.getByLabelText("Direction:");
-  //   fireEvent.change(selectDirection, { target: { value: "DESC" } });
+  it("should update draft direction when selecting a direction", () => {
+    render(
+      <OrdersBy
+        onOrderByAdd={mockOnOrderByAdd}
+        onOrderByRemove={mockOnOrderByRemove}
+      />
+    );
+    const selectDirection = screen.getByLabelText("Direction:");
+    fireEvent.change(selectDirection, { target: { value: "DESC" } });
 
-  //   expect(selectDirection).toHaveValue("DESC");
-  // });
+    expect(selectDirection).toHaveValue("DESC");
+  });
 
-  // TODO
-  // it("should call onOrderByAdd when the apply button is clicked", () => {
-  //   render(
-  //     <OrdersBy
-  //       onOrderByAdd={mockOnOrderByAdd}
-  //       onOrderByRemove={mockOnOrderByRemove}
-  //     />
-  //   );
-  //   const selectField = screen.getByLabelText("Select order by:");
-  //   const selectDirection = screen.getByLabelText("Direction:");
+  it("should call onOrderByAdd when the apply button is clicked", () => {
+    render(
+      <OrdersBy
+        onOrderByAdd={mockOnOrderByAdd}
+        onOrderByRemove={mockOnOrderByRemove}
+      />
+    );
+    const selectField = screen.getByLabelText("Select order by:");
+    const selectDirection = screen.getByLabelText("Direction:");
 
-  //   // Change the field and direction
-  //   fireEvent.change(selectField, {
-  //     target: { value: orderByOptions[1].value },
-  //   });
-  //   fireEvent.change(selectDirection, { target: { value: "DESC" } });
+    // Change the field and direction
+    fireEvent.change(selectField, {
+      target: { value: orderByOptions[1].value },
+    });
+    fireEvent.change(selectDirection, { target: { value: "DESC" } });
 
-  //   const applyButton = screen.getByRole("button", { name: /apply/i });
-  //   fireEvent.click(applyButton);
+    const applyButton = screen.getByRole("button", { name: /apply/i });
+    fireEvent.click(applyButton);
 
-  //   expect(mockOnOrderByAdd).toHaveBeenCalledWith({
-  //     field: orderByOptions[1].value,
-  //     type: "field",
-  //     direction: "DESC",
-  //   });
-  // });
+    expect(mockOnOrderByAdd).toHaveBeenCalledWith({
+      field: orderByOptions[1].value,
+      type: "field",
+      direction: "DESC",
+    });
+  });
 
   it("should not call onOrderByAdd when the apply button is clicked without a valid selection", () => {
     render(
