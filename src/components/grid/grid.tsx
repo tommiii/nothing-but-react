@@ -36,7 +36,7 @@ const Grid: FC<Props> = ({ list = [], onClick }) => {
         <div
           key={item.id}
           className={classNames(
-            "grid grid-cols-4 gap-4 border-l-8 border-l-secondary shadow-xl rounded-lg p-3 text-sm",
+            "grid grid-cols-4 gap-4 border-l-8 border-l-secondary border shadow-xl rounded-lg p-3 text-sm",
             index > 0 && "mt-5"
           )}
           data-testid={`row-${item.id}`}
@@ -52,7 +52,7 @@ const Grid: FC<Props> = ({ list = [], onClick }) => {
             <span className="font-semibold">Category:</span>{" "}
             {renderCategory(item.category)}
           </div>
-          <div className="text-center row-span-2 my-auto">
+          <div className="ml-auto row-span-2 my-auto">
             <Button
               aria-label={`View publication ${item.name || "Unnamed"}`}
               onClick={() => handleClick(item.id)}

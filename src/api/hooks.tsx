@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "./axios-instance";
-import qs from "qs";
+import * as qs from "qs";
 import { APIFilters } from "../types";
 
 interface Options<ResponseType = any, RequestType = any, ErrorType = any> {

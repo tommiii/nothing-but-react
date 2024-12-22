@@ -1,10 +1,9 @@
-import { FC, useState } from "react";
+import { FC, useState, useCallback } from "react";
 import ReactJson from "react-json-view";
 import { Modal } from "react-responsive-modal";
-import debounce from "lodash.debounce";
 import { useGetPublicationsQuery, useGetPublicationQuery } from "../api/hooks";
 import { entriesPerPageOptions } from "../constants";
-import { APIData, APIFilters, Publication } from "../types";
+import { APIData, APIFilters, Direction, Publication } from "../types";
 import {
   Grid,
   Select,
@@ -14,16 +13,15 @@ import {
   OrdersBy,
 } from "../components";
 import logo from "../assets/logo.png";
+
 import "react-responsive-modal/styles.css";
+import { debounce } from "lodash";
 
 const Dashboard: FC = () => {
   const [APIFilters, setAPIFilters] = useState<APIFilters>({
     page: 1,
     limit: 5,
   });
-
-  console.log({ APIFilters });
-
   const [currentPublicationId, setCurrentPublicationId] = useState<string>();
   const [isOpen, setModalOpen] = useState(false);
   const [APIData, setAPIData] = useState<APIData>();
@@ -40,26 +38,99 @@ const Dashboard: FC = () => {
         });
       },
     });
+
   const {
     data: publicationData,
     error: publicationError,
     isLoading: loadingPublication,
   } = useGetPublicationQuery(currentPublicationId as string, {
-    onSuccess: () => {
-      setModalOpen(true);
-    },
+    onSuccess: () => setModalOpen(true),
     disabled: !currentPublicationId,
   });
 
-  if (publicationsError || publicationError) {
-    return <>Something went wrong loading the data. Try again</>;
-  }
-
   const isLoading = loadingPublications || loadingPublication;
+
+  const handleFilterChange = useCallback(
+    (filter: { field: string; value: string }) => {
+      setAPIFilters((prev) => ({
+        ...prev,
+        filter: [
+          ...(prev.filter || []),
+          {
+            field: filter.field,
+            type: "like",
+            value: `%${filter.value}%`,
+          },
+        ],
+      }));
+    },
+    []
+  );
+
+  const handleOrderByChange = useCallback(
+    (orderBy: { field: string; direction: string }) => {
+      setAPIFilters((prev) => ({
+        ...prev,
+        "order-by": [
+          ...(prev?.["order-by"] || []),
+          {
+            field: orderBy.field,
+            type: "field",
+            direction: orderBy.direction as Direction,
+          },
+        ],
+      }));
+    },
+    []
+  );
+
+  const handlePaginationChange = (newPage: number) => {
+    setAPIFilters((prev) => ({
+      ...prev,
+      page: newPage,
+    }));
+  };
+
+  const handleEntriesPerPageChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setAPIFilters((prev) => ({
+      ...prev,
+      limit: Number(e.target.value),
+    }));
+  };
+
+  const handleSearchInputChange = debounce(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setAPIFilters((prev) => ({
+        ...prev,
+        filter: [
+          {
+            field: "name",
+            type: "like",
+            value: `%${e.target.value}%`,
+          },
+        ],
+      }));
+    },
+    1000
+  );
+
+  const currentAPIFilters = APIFilters.filter?.filter(
+    (item) => item.field !== "name"
+  );
+
+  if (publicationsError || publicationError) {
+    return (
+      <div className="text-red-500">
+        Something went wrong loading the data. Try again
+      </div>
+    );
+  }
 
   return (
     <>
-      <header className="flex bg-white">
+      <header className="flex bg-white p-4 shadow-md">
         <img
           width="100px"
           height="90px"
@@ -67,114 +138,71 @@ const Dashboard: FC = () => {
           alt="Logo"
           className="App-logo"
         />
-        <span className="my-auto ml-3 font-medium text-gray-500">
+        <span className="my-auto ml-3 text-lg font-semibold text-gray-600">
           Publications Dashboard
         </span>
       </header>
-      <div className="flex flex-col  p-5">
-        <div className="rounded-xl p-5">
-          <div className="text-gray-500 text-2xl ">
-            {isLoading && "(loading data...)"}
-          </div>
+      <div className="p-5">
+        <div className="rounded-xl p-5 bg-white shadow-md">
+          {isLoading && (
+            <div className="text-gray-500 text-2xl">Loading data...</div>
+          )}
 
-          <div className="rounded-lg bg-white p-5">
+          <div className="rounded-lg bg-white p-5 shadow-md">
             <Input
               placeholder="Search by name..."
-              onChange={debounce((e) => {
-                setAPIFilters((prev) => ({
-                  ...prev,
-                  filter: [
-                    {
-                      field: "name",
-                      type: "like",
-                      value: `%${e.target.value}%`,
-                    },
-                  ],
-                }));
-              }, 1000)}
+              onChange={handleSearchInputChange}
             />
 
-            <div className="flex">
-              <Filters
-                className="mt-5 w-full"
-                onFilterAdd={({ value, field }) => {
-                  setAPIFilters((prev) => ({
-                    ...prev,
-                    filter: [
-                      ...(prev.filter || []),
-                      {
-                        field,
-                        type: "like",
-                        value: `%${value}%`,
-                      },
-                    ],
-                  }));
-                }}
-                onFilterRemove={({ value, field }) => {
-                  setAPIFilters((prev) => ({
-                    ...prev,
-                    filter: prev.filter?.filter(
-                      (item) => item.value !== value || item.field !== field
-                    ),
-                  }));
-                }}
-                filtersApplied={APIFilters.filter}
-              />
-            </div>
-            <div className="flex">
-              <OrdersBy
-                className="mt-5 w-full"
-                onOrderByAdd={({ field, direction }) => {
-                  setAPIFilters((prev) => ({
-                    ...prev,
-                    "order-by": [
-                      ...(prev?.["order-by"] || []),
-                      {
-                        field,
-                        type: "field",
-                        direction,
-                      },
-                    ],
-                  }));
-                }}
-                onOrderByRemove={({ direction, field }) => {
-                  setAPIFilters((prev) => ({
-                    ...prev,
-                    "order-by": prev?.[`order-by`]?.filter(
-                      (item) =>
-                        item.field !== field || item.direction !== direction
-                    ),
-                  }));
-                }}
-                ordersByApplied={APIFilters?.["order-by"]}
-              />
-            </div>
+            <Filters
+              className="mt-5"
+              onFilterAdd={handleFilterChange}
+              onFilterRemove={(removed) => {
+                setAPIFilters((prev) => ({
+                  ...prev,
+                  filter: prev.filter?.filter(
+                    (item) =>
+                      item.value !== removed.value ||
+                      item.field !== removed.field
+                  ),
+                }));
+              }}
+              filtersApplied={currentAPIFilters}
+            />
+
+            <OrdersBy
+              className="mt-5"
+              onOrderByAdd={handleOrderByChange}
+              onOrderByRemove={(removed) => {
+                setAPIFilters((prev) => ({
+                  ...prev,
+                  "order-by": prev["order-by"]?.filter(
+                    (item) =>
+                      item.field !== removed.field ||
+                      item.direction !== removed.direction
+                  ),
+                }));
+              }}
+              ordersByApplied={APIFilters["order-by"]}
+            />
           </div>
-          <div className="rounded-lg mt-5 bg-white flex flex-col p-5">
+
+          <div className="mt-10 rounded-lg bg-white">
             <Grid
               list={APIData?.publications}
               onClick={(id) => {
-                if (currentPublicationId === id) {
-                  setModalOpen(true);
-                } else {
-                  setCurrentPublicationId(id);
-                }
+                setCurrentPublicationId((prev) => (prev === id ? "" : id));
               }}
             />
-            <div className="mt-5 flex justify-between">
-              <div className="flex">
+            <div className="mt-5 flex justify-between items-center">
+              <div className="flex items-center">
                 <Select
                   options={entriesPerPageOptions}
                   label="Entries per page:"
-                  defaultValue={APIData?.pageSize}
-                  onChange={(e) => {
-                    setAPIFilters((prev) => ({
-                      ...prev,
-                      limit: Number(e.target.value),
-                    }));
-                  }}
+                  defaultValue={String(APIData?.pageSize)}
+                  onChange={handleEntriesPerPageChange}
                 />
-                <span className="my-auto ml-3 font-medium text-gray-500">
+                <span className="ml-3 text-gray-500">
                   of {APIData?.itemsCount} items
                 </span>
               </div>
@@ -182,22 +210,12 @@ const Dashboard: FC = () => {
                 key={`${APIData?.currentPage}-${APIData?.pagesCount}`}
                 pagesCount={APIData?.pagesCount}
                 currentPage={APIData?.currentPage}
-                onChange={(newPage) => {
-                  setAPIFilters((prev) => ({
-                    ...prev,
-                    page: newPage,
-                  }));
-                }}
+                onChange={handlePaginationChange}
               />
             </div>
           </div>
-          <Modal
-            open={isOpen}
-            onClose={() => {
-              setModalOpen((prev) => !prev);
-            }}
-            center
-          >
+
+          <Modal open={isOpen} onClose={() => setModalOpen(false)} center>
             <ReactJson src={publicationData} />
           </Modal>
         </div>
