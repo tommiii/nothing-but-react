@@ -149,7 +149,7 @@ describe("Dashboard Component", () => {
     expect(mockGetPublications.mock.calls[2][0]).toEqual(
       expect.objectContaining({
         page: 1,
-        limit: 5,
+        limit: 10,
         filter: [{ field: "status", type: "like", value: "%Draft%" }],
       })
     );
