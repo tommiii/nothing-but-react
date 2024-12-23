@@ -32,17 +32,21 @@ describe("Filters Component", () => {
 
   it("should render the component", () => {
     renderFilters();
-    screen.getByLabelText(/select filter/i);
-    screen.getByPlaceholderText(/filter value/i);
-    screen.getByRole("button", { name: /apply/i });
+    const filterSelect = screen.getByTestId("select-filters-test-id");
+    const filterInput = screen.getByTestId("input-filters-test-id");
+    const applyButton = screen.getByTestId("apply-filter-button-test-id");
+
+    expect(filterSelect).toBeInTheDocument();
+    expect(filterInput).toBeInTheDocument();
+    expect(applyButton).toBeInTheDocument();
   });
 
   it("should apply a filter when the apply button is clicked", async () => {
     renderFilters();
 
-    const select = screen.getByLabelText(/select filter/i);
-    const input = screen.getByPlaceholderText(/filter value/i);
-    const applyButton = screen.getByRole("button", { name: /apply/i });
+    const select = screen.getByTestId("select-filters-test-id");
+    const input = screen.getByTestId("input-filters-test-id");
+    const applyButton = screen.getByTestId("apply-filter-button-test-id");
 
     fireEvent.change(select, { target: { value: field } });
     fireEvent.change(input, { target: { value: "Test Value" } });
@@ -83,12 +87,12 @@ describe("Filters Component", () => {
   it("should disable the apply button when no value is entered", () => {
     renderFilters();
 
-    const applyButton = screen.getByRole("button", { name: /apply/i });
-    const input = screen.getByPlaceholderText(/filter value/i);
+    const applyButton = screen.getByTestId("apply-filter-button-test-id");
+    const input = screen.getByTestId("input-filters-test-id");
 
     expect(applyButton).toBeDisabled();
 
-    const select = screen.getByLabelText(/select filter/i);
+    const select = screen.getByTestId("select-filters-test-id");
     fireEvent.change(select, { target: { value: field } });
     fireEvent.change(input, { target: { value: "Test Value" } });
     expect(applyButton).not.toBeDisabled();

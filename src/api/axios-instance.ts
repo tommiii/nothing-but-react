@@ -21,7 +21,7 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Acquire new token when 403 is detected, refreshToken is not supported for client_credentials
+// Acquire new token when 403/401 is detected, refreshToken is not supported for client_credentials
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {

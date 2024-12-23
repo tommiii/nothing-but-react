@@ -27,9 +27,14 @@ describe("OrdersBy Component", () => {
         onOrderByRemove={mockOnOrderByRemove}
       />
     );
-    expect(screen.getByLabelText("Select order by:")).toBeInTheDocument();
-    expect(screen.getByLabelText("Direction:")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /apply/i })).toBeInTheDocument();
+
+    const selectField = screen.getByTestId("select-order-by-test-id");
+    const selectDirection = screen.getByTestId("select-direction-test-id");
+    const applyButton = screen.getByTestId("apply-order-by-button-test-id");
+
+    expect(selectField).toBeInTheDocument();
+    expect(selectDirection).toBeInTheDocument();
+    expect(applyButton).toBeInTheDocument();
   });
 
   it("should initialize with the first field and direction", () => {
@@ -39,10 +44,12 @@ describe("OrdersBy Component", () => {
         onOrderByRemove={mockOnOrderByRemove}
       />
     );
-    expect(screen.getByLabelText("Select order by:")).toHaveValue(
-      placeholderValue
-    );
-    expect(screen.getByLabelText("Direction:")).toHaveValue("ASC");
+
+    const selectField = screen.getByTestId("select-order-by-test-id");
+    const selectDirection = screen.getByTestId("select-direction-test-id");
+
+    expect(selectField).toHaveValue(placeholderValue);
+    expect(selectDirection).toHaveValue("ASC");
   });
 
   it("should update draft state when selecting a field", () => {
@@ -52,7 +59,7 @@ describe("OrdersBy Component", () => {
         onOrderByRemove={mockOnOrderByRemove}
       />
     );
-    const selectField = screen.getByLabelText("Select order by:");
+    const selectField = screen.getByTestId("select-order-by-test-id");
     fireEvent.change(selectField, {
       target: { value: field },
     });
@@ -67,7 +74,7 @@ describe("OrdersBy Component", () => {
         onOrderByRemove={mockOnOrderByRemove}
       />
     );
-    const selectDirection = screen.getByLabelText("Direction:");
+    const selectDirection = screen.getByTestId("select-direction-test-id");
     fireEvent.change(selectDirection, { target: { value: "DESC" } });
 
     expect(selectDirection).toHaveValue("DESC");
@@ -80,8 +87,8 @@ describe("OrdersBy Component", () => {
         onOrderByRemove={mockOnOrderByRemove}
       />
     );
-    const selectField = screen.getByLabelText("Select order by:");
-    const selectDirection = screen.getByLabelText("Direction:");
+    const selectField = screen.getByTestId("select-order-by-test-id");
+    const selectDirection = screen.getByTestId("select-direction-test-id");
 
     fireEvent.change(selectField, {
       target: { value: field },
@@ -105,8 +112,8 @@ describe("OrdersBy Component", () => {
         onOrderByRemove={mockOnOrderByRemove}
       />
     );
-    const selectField = screen.getByLabelText("Select order by:");
-    const applyButton = screen.getByRole("button", { name: /apply/i });
+    const selectField = screen.getByTestId("select-order-by-test-id");
+    const applyButton = screen.getByTestId("apply-order-by-button-test-id");
 
     fireEvent.change(selectField, {
       target: { value: placeholderValue },
@@ -130,7 +137,6 @@ describe("OrdersBy Component", () => {
       />
     );
 
-    // Check that the badges are rendered for applied orders
     expect(screen.getByText(`${field}='ASC'`)).toBeInTheDocument();
     expect(screen.getByText(`${anotherField}='DESC'`)).toBeInTheDocument();
   });
@@ -166,17 +172,15 @@ describe("OrdersBy Component", () => {
         onOrderByRemove={mockOnOrderByRemove}
       />
     );
-    const applyButton = screen.getByRole("button", { name: /apply/i });
+    const applyButton = screen.getByTestId("apply-order-by-button-test-id");
 
-    // Apply button should be disabled when the default field is selected
     expect(applyButton).toBeDisabled();
 
-    const selectField = screen.getByLabelText("Select order by:");
+    const selectField = screen.getByTestId("select-order-by-test-id");
     fireEvent.change(selectField, {
       target: { value: field },
     });
 
-    // Apply button should be enabled after selecting a valid field
     expect(applyButton).toBeEnabled();
   });
 });

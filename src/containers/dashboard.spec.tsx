@@ -138,8 +138,8 @@ describe("Dashboard Component", () => {
   it("should update the API filters when a filter is added", async () => {
     render(<Dashboard />);
 
-    const select = screen.getByLabelText(/select filter/i);
-    const input = screen.getByPlaceholderText(/filter value/i);
+    const select = screen.getByTestId("select-filters-test-id");
+    const input = screen.getByTestId("input-filters-test-id");
     const applyButton = screen.getByTestId("apply-filter-button-test-id");
 
     fireEvent.change(select, { target: { value: "status" } });

@@ -79,6 +79,7 @@ const OrdersBy: FC<Props> = ({
       <div className="flex flex-wrap">
         <Select
           id="select-order-by-id"
+          data-testid="select-order-by-test-id"
           className="w-full sm:w-auto"
           options={filteredOrderByOptions}
           defaultValue={orderByDraft.field}
@@ -88,6 +89,7 @@ const OrdersBy: FC<Props> = ({
         />
         <Select
           id="select-direction-id"
+          data-testid="select-direction-test-id"
           className="w-full sm:w-auto sm:ml-3 sm:mt-0 mt-3"
           options={orderByDirectionOptions}
           defaultValue={orderByDraft.direction}
@@ -97,6 +99,7 @@ const OrdersBy: FC<Props> = ({
         />
         <Button
           disabled={disabled}
+          data-testid="apply-order-by-button-test-id"
           className="w-full sm:w-auto ml-auto sm:mt-0 mt-3"
           onClick={handleApply}
         >
