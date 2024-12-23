@@ -233,9 +233,6 @@ const Dashboard: FC = () => {
                   defaultValue={String(APIData?.pageSize)}
                   onChange={handleEntriesPerPageChange}
                 />
-                <span className="ml-3 text-gray-500">
-                  of {APIData?.itemsCount} items
-                </span>
               </div>
               <Pagination
                 key={`${APIData?.currentPage}-${APIData?.pagesCount}`}

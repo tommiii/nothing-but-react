@@ -54,13 +54,14 @@ const PublicationsGrid: FC<Props> = ({
             <span className="font-semibold">Status:</span>{" "}
             {renderStatus(item.status)}
           </div>
-          <div>
-            <span className="font-semibold">Category:</span>{" "}
+          <div className="col-span-2 sm:col-span-1 flex mx-auto mb-auto">
+            <span className="font-semibold mr-1 ">Category:</span>{" "}
             {renderCategory(item.category)}
           </div>
-          <div className="col-span-2 col-start-3 row-start-2 mx-auto sm:row-span-2 sm:col-span-1 sm:col-start-auto sm:my-auto">
+          <div className="col-span-2 w-full col-start-3 row-start-2 mx-auto sm:row-span-2 sm:col-span-1 sm:col-start-auto sm:my-auto flex">
             <Button
               disabled={disableInteraction}
+              className="sm:ml-auto mx-auto my-auto"
               id={item.id}
               aria-label={`View publication ${item.name || "Unnamed"}`}
               onClick={() => handleClick(item.id)}
