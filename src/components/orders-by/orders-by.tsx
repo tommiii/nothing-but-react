@@ -4,6 +4,7 @@ import { orderByDirectionOptions, orderByOptions } from "../../constants";
 import Button from "../button/button";
 import Badge from "../badge/badge";
 import { Direction, OrderBy } from "../../types";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 interface Props {
   onOrderByAdd: (orderBy: OrderBy) => void;
@@ -108,15 +109,23 @@ const OrdersBy: FC<Props> = ({
       </div>
 
       <div className="mt-3 flex flex-wrap">
-        {ordersByApplied.map((orderByApplied) => (
-          <Badge
-            key={orderByApplied.field}
-            className="mx-1 cursor-pointer"
-            onClick={() => handleRemove(orderByApplied)}
-          >
-            {`${orderByApplied.field}='${orderByApplied.direction}'`}
-          </Badge>
-        ))}
+        {ordersByApplied.map((orderByApplied) => {
+          const tooltipId = `${orderByApplied.field}-${orderByApplied.direction}`;
+          return (
+            <div key={`${tooltipId}-key`}>
+              <span data-tooltip-id={tooltipId}>
+                <Badge
+                  key={orderByApplied.field}
+                  className="mx-1 cursor-pointer"
+                  onClick={() => handleRemove(orderByApplied)}
+                >
+                  {`${orderByApplied.field}='${orderByApplied.direction}'`}
+                </Badge>
+              </span>
+              <ReactTooltip id={tooltipId} place="bottom" content="Remove" />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

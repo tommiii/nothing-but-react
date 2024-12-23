@@ -5,6 +5,10 @@ export interface Publication {
   modified_on: string;
   category?: string;
   status?: string;
+  identifier: string;
+  is_visible: boolean;
+  uid: string;
+  _links: Record<string, { href: string }>;
 }
 
 export type Filter = { field: string; value: string; type: "like" | "eq" };

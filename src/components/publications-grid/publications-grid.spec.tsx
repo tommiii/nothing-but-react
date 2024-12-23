@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import Grid from "./grid";
+import PublicationsGrid from "./publications-grid";
 
 describe("Grid component", () => {
   const mockOnClick = jest.fn();
@@ -24,12 +24,12 @@ describe("Grid component", () => {
   ];
 
   it("should render 'No publications available' when list is empty", () => {
-    render(<Grid list={[]} onClick={mockOnClick} />);
+    render(<PublicationsGrid list={[]} onClick={mockOnClick} />);
     expect(screen.getByText(/No publications available/i)).toBeInTheDocument();
   });
 
   it("should render publication details correctly", () => {
-    render(<Grid list={publications} onClick={mockOnClick} />);
+    render(<PublicationsGrid list={publications} onClick={mockOnClick} />);
 
     publications.forEach(
       ({ id, name, status, category, created_on, modified_on }) => {
@@ -45,7 +45,7 @@ describe("Grid component", () => {
   });
 
   it("should click 'View' button and trigger onClick with correct id", () => {
-    render(<Grid list={publications} onClick={mockOnClick} />);
+    render(<PublicationsGrid list={publications} onClick={mockOnClick} />);
 
     publications.forEach((publication) => {
       fireEvent.click(screen.getByTestId(`button-${publication.id}`));
@@ -65,7 +65,12 @@ describe("Grid component", () => {
       },
     ];
 
-    render(<Grid list={publicationsWithMissingData} onClick={mockOnClick} />);
+    render(
+      <PublicationsGrid
+        list={publicationsWithMissingData}
+        onClick={mockOnClick}
+      />
+    );
 
     const publicationRow = screen.getByTestId(
       `row-${publicationsWithMissingData[0].id}`

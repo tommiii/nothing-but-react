@@ -21,7 +21,7 @@ const renderCategory = (category?: string) => (
   </span>
 );
 
-const Grid: FC<Props> = ({
+const PublicationsGrid: FC<Props> = ({
   list = [],
   onClick,
   disableInteraction = false,
@@ -82,4 +82,4 @@ const Grid: FC<Props> = ({
   );
 };
 
-export default Grid;
+export default PublicationsGrid;

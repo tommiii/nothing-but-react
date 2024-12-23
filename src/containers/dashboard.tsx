@@ -1,16 +1,16 @@
 import { FC, useState, useCallback } from "react";
-import ReactJson from "react-json-view";
 import { Modal } from "react-responsive-modal";
 import { useGetPublicationsQuery, useGetPublicationQuery } from "../api/hooks";
 import { entriesPerPageOptions } from "../constants";
 import { APIData, APIFilters, Direction, Filter, Publication } from "../types";
 import {
-  Grid,
+  PublicationsGrid,
   Select,
   Input,
   Pagination,
   Filters,
   OrdersBy,
+  PublicationView,
 } from "../components";
 import { ToastContainer, toast } from "react-toastify";
 import { Collapse } from "@kunukn/react-collapse";
@@ -213,7 +213,7 @@ const Dashboard: FC = () => {
             </div>
           </Collapse>
           <div className="mt-10 rounded-lg bg-white">
-            <Grid
+            <PublicationsGrid
               list={APIData?.publications}
               onClick={(id) => {
                 if (currentPublicationId === id) {
@@ -245,8 +245,15 @@ const Dashboard: FC = () => {
               />
             </div>
           </div>
-          <Modal open={isModalOpen} onClose={() => setModalOpen(false)} center>
-            <ReactJson src={publicationData} />
+          <Modal
+            classNames={{ modal: "rounded" }}
+            open={isModalOpen}
+            onClose={() => setModalOpen(false)}
+            center
+          >
+            {publicationData && (
+              <PublicationView publication={publicationData} />
+            )}
           </Modal>
           <ToastContainer data-testid="error-toast-test-id" theme="colored" />
         </div>
