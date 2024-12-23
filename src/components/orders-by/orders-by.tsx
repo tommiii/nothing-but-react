@@ -80,7 +80,7 @@ const OrdersBy: FC<Props> = ({
         <Select
           id="select-order-by-id"
           data-testid="select-order-by-test-id"
-          className="w-full sm:w-auto"
+          className="w-full md:w-auto"
           options={filteredOrderByOptions}
           defaultValue={orderByDraft.field}
           onChange={handleFieldChange}
@@ -90,7 +90,7 @@ const OrdersBy: FC<Props> = ({
         <Select
           id="select-direction-id"
           data-testid="select-direction-test-id"
-          className="w-full sm:w-auto sm:ml-3 sm:mt-0 mt-3"
+          className="w-full md:w-auto md:ml-3 md:mt-0 mt-3"
           options={orderByDirectionOptions}
           defaultValue={orderByDraft.direction}
           onChange={handleDirectionChange}
@@ -100,7 +100,7 @@ const OrdersBy: FC<Props> = ({
         <Button
           disabled={disabled}
           data-testid="apply-order-by-button-test-id"
-          className="w-full sm:w-auto ml-auto sm:mt-0 mt-3"
+          className="w-full md:w-auto ml-auto md:mt-0 mt-3"
           onClick={handleApply}
         >
           Apply

@@ -224,7 +224,7 @@ const Dashboard: FC = () => {
               }}
               disableInteraction={isLoading}
             />
-            <div className="mt-5 flex justify-between items-center">
+            <div className="mt-5 flex flex-wrap sm:justify-between justify-center text-center items-center">
               <div className="flex items-center">
                 <Select
                   id="entries-per-page-select"
