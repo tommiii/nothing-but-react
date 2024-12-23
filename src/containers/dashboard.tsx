@@ -144,14 +144,6 @@ const Dashboard: FC = () => {
     (item) => item.field !== "name"
   );
 
-  // if (publicationsError || publicationError) {
-  //   return (
-  //     <div className="text-red-500">
-  //       Something went wrong loading the data. Try again
-  //     </div>
-  //   );
-  // }
-
   return (
     <>
       <header className="flex bg-white p-4 shadow-md">
@@ -165,13 +157,15 @@ const Dashboard: FC = () => {
         <span className="my-auto ml-3 text-lg font-semibold text-gray-600">
           Publications Dashboard
         </span>
+        {isLoading && (
+          <div
+            data-testid="spinner-test-id"
+            className="animate-spin ml-auto my-auto rounded-full h-6 w-6 border-4 border-primary border-t-transparent"
+          ></div>
+        )}
       </header>
       <div className="p-5">
         <div className="rounded-xl p-5 bg-white shadow-md">
-          {isLoading && (
-            <div className="text-gray-500 text-2xl">Loading data...</div>
-          )}
-
           <div className="rounded-lg bg-white p-5 shadow-md">
             <Input
               placeholder="Search by name..."

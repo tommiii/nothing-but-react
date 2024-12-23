@@ -93,7 +93,7 @@ describe("Dashboard Component", () => {
 
     render(<Dashboard />);
 
-    expect(screen.getByText(/Loading data.../i)).toBeInTheDocument();
+    expect(screen.getByTestId("spinner-test-id")).toBeInTheDocument();
   });
 
   it("should handle a successful publications fetch", async () => {
