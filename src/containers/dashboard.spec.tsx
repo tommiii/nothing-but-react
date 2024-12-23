@@ -194,7 +194,7 @@ describe("Dashboard Component", () => {
   it("should update the entries per page correctly", async () => {
     render(<Dashboard />);
 
-    const select = screen.getByLabelText(/Entries per page:/i);
+    const select = screen.getByLabelText(/Show:/i);
     fireEvent.change(select, { target: { value: "10" } });
 
     expect(mockGetPublications.mock.calls[2][0]).toEqual(

@@ -230,7 +230,7 @@ const Dashboard: FC = () => {
                 <Select
                   id="entries-per-page-select"
                   options={entriesPerPageOptions}
-                  label="Show"
+                  label="Show:"
                   defaultValue={String(APIData?.pageSize)}
                   onChange={handleEntriesPerPageChange}
                 />
