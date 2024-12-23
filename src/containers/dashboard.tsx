@@ -123,6 +123,7 @@ const Dashboard: FC = () => {
   ) => {
     setAPIFilters((prev) => ({
       ...prev,
+      page: 1,
       limit: Number(e.target.value),
     }));
   };
@@ -229,10 +230,13 @@ const Dashboard: FC = () => {
                 <Select
                   id="entries-per-page-select"
                   options={entriesPerPageOptions}
-                  label="Entries per page:"
+                  label="Show"
                   defaultValue={String(APIData?.pageSize)}
                   onChange={handleEntriesPerPageChange}
                 />
+                <span className="ml-2 font-medium text-gray-500">
+                  out of {APIData?.itemsCount} items
+                </span>
               </div>
               <Pagination
                 key={`${APIData?.currentPage}-${APIData?.pagesCount}`}
