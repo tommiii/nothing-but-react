@@ -63,12 +63,15 @@ const OrdersBy: FC<Props> = ({
   const handleApply = useCallback(() => {
     if (orderByDraft.field && orderByDraft.direction) {
       onOrderByAdd(orderByDraft);
+      setOrderByDraft((prev) => ({ ...prev, field: orderByOptions[0].value }));
     }
   }, [orderByDraft, onOrderByAdd]);
 
   const handleRemove = (orderBy: OrderBy) => {
     onOrderByRemove(orderBy);
   };
+
+  const disabled = !orderByDraft.field || orderByDraft.field === "placeholder";
 
   return (
     <div className={className}>
@@ -92,7 +95,7 @@ const OrdersBy: FC<Props> = ({
           aria-label="Select direction for ordering"
         />
         <Button
-          disabled={orderByDraft.field === orderByOptions[0].value}
+          disabled={disabled}
           className="w-full sm:w-auto ml-auto sm:mt-0 mt-3"
           onClick={handleApply}
         >
