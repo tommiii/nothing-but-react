@@ -13,6 +13,7 @@ import {
   OrdersBy,
 } from "../components";
 import { ToastContainer, toast } from "react-toastify";
+import { Collapse } from "@kunukn/react-collapse";
 
 import logo from "../assets/logo.png";
 
@@ -26,6 +27,7 @@ const Dashboard: FC = () => {
   });
   const [currentPublicationId, setCurrentPublicationId] = useState<string>();
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isCollapseOpen, setCollapseOpen] = useState(false);
   const [APIData, setAPIData] = useState<APIData>();
 
   const { isLoading: loadingPublications } = useGetPublicationsQuery(
@@ -71,6 +73,7 @@ const Dashboard: FC = () => {
     const value = filter.type === "like" ? `%${filter.value}%` : filter.value;
     setAPIFilters((prev) => ({
       ...prev,
+      page: 1,
       filter: [
         ...(prev.filter || []),
         {
@@ -85,6 +88,7 @@ const Dashboard: FC = () => {
   const handleFilterRemove = useCallback((filter: Filter) => {
     setAPIFilters((prev) => ({
       ...prev,
+      page: 1,
       filter: prev.filter?.filter(
         (item) => item.value !== filter.value || item.field !== filter.field
       ),
@@ -166,36 +170,49 @@ const Dashboard: FC = () => {
       </header>
       <div className="p-5">
         <div className="rounded-xl p-5 bg-white shadow-md">
-          <div className="rounded-lg bg-white p-5 shadow-md">
+          <div className="flex">
             <Input
               placeholder="Search by name..."
               onChange={handleSearchInputChange}
+              className="w-full"
             />
-
-            <Filters
-              className="mt-5"
-              onFilterAdd={handleFilterAdd}
-              onFilterRemove={handleFilterRemove}
-              filtersApplied={currentAPIFilters}
-            />
-
-            <OrdersBy
-              className="mt-5"
-              onOrderByAdd={handleOrderByChange}
-              onOrderByRemove={(removed) => {
-                setAPIFilters((prev) => ({
-                  ...prev,
-                  "order-by": prev["order-by"]?.filter(
-                    (item) =>
-                      item.field !== removed.field ||
-                      item.direction !== removed.direction
-                  ),
-                }));
-              }}
-              ordersByApplied={APIFilters["order-by"]}
-            />
+            <svg
+              className="cursor-pointer my-auto text-primary fill-current"
+              onClick={() => setCollapseOpen((prev) => !prev)}
+              width="30"
+              height="15"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+            >
+              <path d="M3.9 54.9C10.5 40.9 24.5 32 40 32l432 0c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9 320 448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6l0-79.1L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z" />
+            </svg>
           </div>
+          <Collapse isOpen={isCollapseOpen}>
+            <div className="rounded-lg bg-white p-5 shadow-md">
+              <Filters
+                className="mt-5"
+                onFilterAdd={handleFilterAdd}
+                onFilterRemove={handleFilterRemove}
+                filtersApplied={currentAPIFilters}
+              />
 
+              <OrdersBy
+                className="mt-5"
+                onOrderByAdd={handleOrderByChange}
+                onOrderByRemove={(removed) => {
+                  setAPIFilters((prev) => ({
+                    ...prev,
+                    "order-by": prev["order-by"]?.filter(
+                      (item) =>
+                        item.field !== removed.field ||
+                        item.direction !== removed.direction
+                    ),
+                  }));
+                }}
+                ordersByApplied={APIFilters["order-by"]}
+              />
+            </div>
+          </Collapse>
           <div className="mt-10 rounded-lg bg-white">
             <Grid
               list={APIData?.publications}

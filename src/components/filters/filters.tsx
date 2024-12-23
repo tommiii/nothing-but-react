@@ -102,7 +102,7 @@ const Filters: FC<Props> = ({
         <Select
           id="select-filter-type-id"
           data-testid="select-filter-type-test-id"
-          className="w-full sm:w-auto sm:ml-3 sm:mt-0 mt-3"
+          className="w-full md:w-auto md:ml-3 md:mt-0 mt-3"
           options={filterTypeOptions}
           label="type:"
           defaultValue={filterDraft.type}
@@ -111,7 +111,7 @@ const Filters: FC<Props> = ({
         <Input
           id="input-filters-id"
           data-testid="input-filters-test-id"
-          className="w-full sm:w-auto sm:ml-3 sm:mt-0 mt-3"
+          className="w-full md:w-auto md:ml-3 md:mt-0 mt-3"
           placeholder="Filter value..."
           value={filterDraft.value}
           onChange={handleValueChange}
@@ -119,7 +119,7 @@ const Filters: FC<Props> = ({
         <Button
           id="apply-filter-button"
           data-testid="apply-filter-button-test-id"
-          className="w-full sm:w-auto ml-auto sm:mt-0 mt-3"
+          className="w-full md:w-auto md:mt-0 ml-auto mt-3"
           disabled={disabled}
           onClick={handleApplyFilter}
         >
