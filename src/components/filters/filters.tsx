@@ -5,6 +5,7 @@ import { filtersOptions, filterTypeOptions } from "../../constants";
 import Button from "../button/button";
 import Badge from "../badge/badge";
 import { Filter } from "../../types";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 interface Props {
   onFilterAdd: (filter: Filter) => void;
@@ -129,17 +130,24 @@ const Filters: FC<Props> = ({
 
       {filtersApplied.length > 0 && (
         <div className="mt-3 flex flex-wrap">
-          {filtersApplied.map((filterApplied) => (
-            <Badge
-              key={filterApplied.field}
-              className="mx-1"
-              onClick={() => handleRemoveFilter(filterApplied)}
-            >
-              {`${filterApplied.field}[${
-                filterApplied.type
-              }]='${renderFilterValue(filterApplied)}'`}
-            </Badge>
-          ))}
+          {filtersApplied.map((filterApplied) => {
+            const tooltipId = `${filterApplied.field}-${filterApplied.type}-${filterApplied.value}`;
+            return (
+              <div key={`${tooltipId}-key`}>
+                <span data-tooltip-id={tooltipId}>
+                  <Badge
+                    className="mx-1"
+                    onClick={() => handleRemoveFilter(filterApplied)}
+                  >
+                    {`${filterApplied.field}[${
+                      filterApplied.type
+                    }]='${renderFilterValue(filterApplied)}'`}
+                  </Badge>
+                </span>
+                <ReactTooltip id={tooltipId} place="bottom" content="Remove" />
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

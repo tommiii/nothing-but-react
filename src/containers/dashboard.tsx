@@ -17,7 +17,6 @@ import { Collapse } from "@kunukn/react-collapse";
 
 import logo from "../assets/logo.png";
 
-import "react-responsive-modal/styles.css";
 import { debounce } from "lodash";
 
 const Dashboard: FC = () => {
