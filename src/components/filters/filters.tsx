@@ -87,6 +87,7 @@ const Filters: FC<Props> = ({
 
   return (
     <div className={className}>
+      <label className="font-medium text-gray-500">Filter:</label>
       <div className="flex flex-wrap">
         <Select
           id="select-filters-id"
@@ -96,23 +97,23 @@ const Filters: FC<Props> = ({
             (filterOption) =>
               !currentFiltersAppliedField.includes(filterOption.value)
           )}
-          label="Select filter:"
           defaultValue={filterDraft.field}
           onChange={handleFieldChange}
+          fullWidth
         />
         <Select
           id="select-filter-type-id"
           data-testid="select-filter-type-test-id"
-          className="w-full md:w-auto md:ml-3 md:mt-0 mt-3"
+          className="w-full sm:w-auto sm:ml-3 sm:mt-0 mt-3"
           options={filterTypeOptions}
-          label="type:"
           defaultValue={filterDraft.type}
           onChange={handleTypeChange}
+          fullWidth
         />
         <Input
           id="input-filters-id"
           data-testid="input-filters-test-id"
-          className="w-full md:w-auto md:ml-3 md:mt-0 mt-3"
+          className="w-full sm:w-auto sm:ml-3 sm:mt-0 mt-3"
           placeholder="Filter value..."
           value={filterDraft.value}
           onChange={handleValueChange}
@@ -120,14 +121,13 @@ const Filters: FC<Props> = ({
         <Button
           id="apply-filter-button"
           data-testid="apply-filter-button-test-id"
-          className="w-full md:w-auto md:mt-0 ml-auto mt-3"
+          className="w-full sm:w-auto ml-auto sm:mt-0 mt-3"
           disabled={disabled}
           onClick={handleApplyFilter}
         >
           Apply
         </Button>
       </div>
-
       {filtersApplied.length > 0 && (
         <div className="mt-3 flex flex-wrap">
           {filtersApplied.map((filterApplied) => {

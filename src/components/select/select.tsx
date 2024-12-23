@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { FC, SelectHTMLAttributes } from "react";
 
 interface Option {
@@ -11,6 +12,7 @@ interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
   defaultValue?: string | number;
   label?: string;
   className?: string;
+  fullWidth?: boolean;
 }
 
 const Select: FC<Props> = ({
@@ -19,6 +21,7 @@ const Select: FC<Props> = ({
   label,
   onChange,
   className,
+  fullWidth = false,
   ...props
 }) => {
   return (
@@ -31,7 +34,10 @@ const Select: FC<Props> = ({
       <select
         {...props}
         id={props?.id}
-        className="shadow text-center appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring cursor-pointer"
+        className={classNames(
+          "shadow text-center appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring cursor-pointer",
+          { "w-full": fullWidth }
+        )}
         onChange={onChange}
         defaultValue={defaultValue}
       >

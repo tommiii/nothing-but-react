@@ -75,24 +75,25 @@ const OrdersBy: FC<Props> = ({
 
   return (
     <div className={className}>
+      <label className="font-medium text-gray-500">Order by:</label>
       <div className="flex flex-wrap">
         <Select
           id="select-order-by-id"
           className="w-full sm:w-auto"
           options={filteredOrderByOptions}
-          label="Select order by:"
           defaultValue={orderByDraft.field}
           onChange={handleFieldChange}
           aria-label="Select field to order by"
+          fullWidth
         />
         <Select
           id="select-direction-id"
           className="w-full sm:w-auto sm:ml-3 sm:mt-0 mt-3"
           options={orderByDirectionOptions}
-          label="Direction:"
           defaultValue={orderByDraft.direction}
           onChange={handleDirectionChange}
           aria-label="Select direction for ordering"
+          fullWidth
         />
         <Button
           disabled={disabled}
