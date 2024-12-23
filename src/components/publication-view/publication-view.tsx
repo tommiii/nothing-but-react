@@ -40,7 +40,7 @@ const PublicationView: FC<Props> = ({ publication }) => {
         </div>
         <div>
           <span className="font-semibold">Visible:</span>{" "}
-          {publication.is_visible.toString()}
+          {publication.is_visible?.toString()}
         </div>
         <div>
           <span className="font-semibold">Status:</span>{" "}

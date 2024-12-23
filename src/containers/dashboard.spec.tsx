@@ -14,6 +14,12 @@ describe("Dashboard Component", () => {
     content: "Detailed content here.",
     created_on: "2023-01-01",
     modified_on: "2023-01-02",
+    _links: {
+      self: { href: "https://example.com/self" },
+      next: { href: "https://example.com/next" },
+    },
+    uid: "12345",
+    is_visible: true,
   };
 
   const mockPublicationsData = {

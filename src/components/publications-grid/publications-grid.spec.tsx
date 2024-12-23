@@ -12,6 +12,10 @@ describe("Grid component", () => {
       category: "Tech",
       created_on: "2024-01-01",
       modified_on: "2024-01-10",
+      identifier: "123",
+      is_visible: true,
+      uid: "123",
+      _links: {},
     },
     {
       id: "2",
@@ -20,6 +24,10 @@ describe("Grid component", () => {
       category: "Business",
       created_on: "2024-02-01",
       modified_on: "2024-02-10",
+      identifier: "123",
+      is_visible: true,
+      uid: "123",
+      _links: {},
     },
   ];
 
@@ -62,6 +70,10 @@ describe("Grid component", () => {
         category: undefined,
         created_on: "2024-03-01",
         modified_on: "2024-03-10",
+        identifier: "123",
+        is_visible: true,
+        uid: "123",
+        _links: {},
       },
     ];
 
