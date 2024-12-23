@@ -6,6 +6,7 @@ import { Button } from "../button";
 interface Props {
   list: Publication[] | undefined;
   onClick: (id: string) => void;
+  disableInteraction?: boolean;
 }
 
 const renderStatus = (status?: string) => (
@@ -20,7 +21,11 @@ const renderCategory = (category?: string) => (
   </span>
 );
 
-const Grid: FC<Props> = ({ list = [], onClick }) => {
+const Grid: FC<Props> = ({
+  list = [],
+  onClick,
+  disableInteraction = false,
+}) => {
   const handleClick = useCallback(
     (id: string) => {
       onClick(id);
@@ -55,6 +60,7 @@ const Grid: FC<Props> = ({ list = [], onClick }) => {
           </div>
           <div className="ml-auto row-span-2 my-auto">
             <Button
+              disabled={disableInteraction}
               id={item.id}
               aria-label={`View publication ${item.name || "Unnamed"}`}
               onClick={() => handleClick(item.id)}

@@ -22,7 +22,7 @@ import { debounce } from "lodash";
 const Dashboard: FC = () => {
   const [APIFilters, setAPIFilters] = useState<APIFilters>({
     page: 1,
-    limit: 5,
+    limit: 10,
   });
   const [currentPublicationId, setCurrentPublicationId] = useState<string>();
   const [isModalOpen, setModalOpen] = useState(false);
@@ -146,7 +146,7 @@ const Dashboard: FC = () => {
 
   return (
     <>
-      <header className="flex bg-white p-4 shadow-md">
+      <header className="flex bg-white sticky top-0 p-4 shadow-md">
         <img
           width="100px"
           height="90px"
@@ -206,6 +206,7 @@ const Dashboard: FC = () => {
                   setCurrentPublicationId(id);
                 }
               }}
+              disableInteraction={isLoading}
             />
             <div className="mt-5 flex justify-between items-center">
               <div className="flex items-center">
