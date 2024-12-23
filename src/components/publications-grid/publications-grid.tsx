@@ -58,7 +58,7 @@ const PublicationsGrid: FC<Props> = ({
             <span className="font-semibold">Category:</span>{" "}
             {renderCategory(item.category)}
           </div>
-          <div className="ml-auto row-span-2 my-auto">
+          <div className="col-span-2 col-start-3 row-start-2 mx-auto sm:row-span-2 sm:col-span-1 sm:col-start-auto sm:my-auto">
             <Button
               disabled={disableInteraction}
               id={item.id}
@@ -68,11 +68,11 @@ const PublicationsGrid: FC<Props> = ({
               View
             </Button>
           </div>
-          <div>
-            <span className="font-semibold">Created:</span>{" "}
+          <div className="col-start-2 row-start-2 sm:row-start-2">
+            <span className="font-semibold ">Created:</span>{" "}
             {item.created_on || "N/A"}
           </div>
-          <div>
+          <div className="col-start-1 row-start-2 sm:row-start-2">
             <span className="font-semibold">Modified:</span>{" "}
             {item.modified_on || "N/A"}
           </div>
