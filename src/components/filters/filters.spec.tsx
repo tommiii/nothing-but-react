@@ -88,6 +88,8 @@ describe("Filters Component", () => {
 
     expect(applyButton).toBeDisabled();
 
+    const select = screen.getByLabelText(/select filter/i);
+    fireEvent.change(select, { target: { value: field } });
     fireEvent.change(input, { target: { value: "Test Value" } });
     expect(applyButton).not.toBeDisabled();
 

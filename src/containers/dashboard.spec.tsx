@@ -167,17 +167,22 @@ describe("Dashboard Component", () => {
   });
 
   it("should handle error states", async () => {
-    mockGetPublications.mockReturnValueOnce({
-      data: null,
-      isLoading: false,
-      error: { message: "Error fetching publications" },
-    });
+    mockGetPublications
+      .mockImplementationOnce((_, options) => {
+        options?.onError();
+        return {
+          isLoading: true,
+          error: null,
+        };
+      })
+      .mockReturnValue({
+        isLoading: false,
+        error: "Some Error",
+      });
 
     render(<Dashboard />);
 
-    expect(
-      screen.getByText(/Something went wrong loading the data. Try again/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Something went wrong!/i)).toBeInTheDocument();
   });
 
   it("should update the entries per page correctly", async () => {

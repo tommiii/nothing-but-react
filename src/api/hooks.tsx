@@ -6,7 +6,7 @@ import { APIFilters } from "../types";
 
 interface Options<ResponseType = any, RequestType = any, ErrorType = any> {
   onSuccess?: (responseData: ResponseType, requestData?: RequestType) => void;
-  onError?: (error: ErrorType) => void;
+  onError?: (error: ErrorType, requestData?: RequestType) => void;
   disabled?: boolean;
 }
 
@@ -57,6 +57,9 @@ const useGetPublicationsQuery = (
           return data;
         })
         .catch((error) => {
+          if (options?.onError) {
+            options?.onError(error);
+          }
           throw error;
         });
     },

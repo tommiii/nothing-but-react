@@ -12,6 +12,8 @@ import {
   Filters,
   OrdersBy,
 } from "../components";
+import { ToastContainer, toast } from "react-toastify";
+
 import logo from "../assets/logo.png";
 
 import "react-responsive-modal/styles.css";
@@ -26,10 +28,10 @@ const Dashboard: FC = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [APIData, setAPIData] = useState<APIData>();
 
-  const { error: publicationsError, isLoading: loadingPublications } =
-    useGetPublicationsQuery(APIFilters, {
-      onSuccess: (data) => {
-        //TODO check data when 0
+  const { isLoading: loadingPublications } = useGetPublicationsQuery(
+    APIFilters,
+    {
+      onSuccess(data) {
         setAPIData({
           publications: data?._embedded?.edition as Publication[],
           itemsCount: data?.total_items,
@@ -38,16 +40,30 @@ const Dashboard: FC = () => {
           pageSize: data?.page_size,
         });
       },
-    });
+      onError() {
+        toast.error(
+          <span>
+            Something went wrong! <a href=".">Reload!</a>
+          </span>
+        );
+        setAPIData(undefined);
+      },
+    }
+  );
 
-  const {
-    data: publicationData,
-    error: publicationError,
-    isLoading: loadingPublication,
-  } = useGetPublicationQuery(currentPublicationId as string, {
-    onSuccess: () => setModalOpen(true),
-    disabled: !currentPublicationId,
-  });
+  const { data: publicationData, isLoading: loadingPublication } =
+    useGetPublicationQuery(currentPublicationId as string, {
+      onSuccess: () => setModalOpen(true),
+      onError() {
+        toast.error(
+          <span>
+            Something went wrong! <a href=".">Reload!</a>
+          </span>
+        );
+        setCurrentPublicationId(undefined);
+      },
+      disabled: !currentPublicationId,
+    });
 
   const isLoading = loadingPublications || loadingPublication;
 
@@ -128,13 +144,13 @@ const Dashboard: FC = () => {
     (item) => item.field !== "name"
   );
 
-  if (publicationsError || publicationError) {
-    return (
-      <div className="text-red-500">
-        Something went wrong loading the data. Try again
-      </div>
-    );
-  }
+  // if (publicationsError || publicationError) {
+  //   return (
+  //     <div className="text-red-500">
+  //       Something went wrong loading the data. Try again
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -221,6 +237,7 @@ const Dashboard: FC = () => {
           <Modal open={isModalOpen} onClose={() => setModalOpen(false)} center>
             <ReactJson src={publicationData} />
           </Modal>
+          <ToastContainer data-testid="error-toast-test-id" theme="colored" />
         </div>
       </div>
     </>

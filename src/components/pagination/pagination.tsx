@@ -18,19 +18,18 @@ const Pagination: FC<Props> = ({
   prevText = "Prev",
   nextText = "Next",
 }) => {
-  const page = Math.max(1, Math.min(currentPage, pagesCount));
-  const disablePreviousPage = page === 1;
-  const disableNextPage = page === pagesCount;
+  const disablePreviousPage = currentPage === 1 || !currentPage;
+  const disableNextPage = currentPage === pagesCount || !pagesCount;
 
   const handlePrevClick = () => {
     if (!disablePreviousPage) {
-      onChange(page - 1);
+      onChange(currentPage - 1);
     }
   };
 
   const handleNextClick = () => {
     if (!disableNextPage) {
-      onChange(page + 1);
+      onChange(currentPage + 1);
     }
   };
 
@@ -46,7 +45,7 @@ const Pagination: FC<Props> = ({
         </Button>
 
         <p className="font-medium text-gray-500 my-auto mx-2">
-          Page {page} of {pagesCount}
+          Page {currentPage} of {pagesCount}
         </p>
 
         <Button

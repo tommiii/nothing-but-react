@@ -79,6 +79,11 @@ const Filters: FC<Props> = ({
     [onFilterRemove]
   );
 
+  const disabled =
+    !filterDraft.value ||
+    filterDraft.field === "placeholder" ||
+    currentFiltersAppliedField.includes(filterDraft.field);
+
   return (
     <div className={className}>
       <div className="flex flex-wrap">
@@ -115,10 +120,7 @@ const Filters: FC<Props> = ({
           id="apply-filter-button"
           data-testid="apply-filter-button-test-id"
           className="w-full sm:w-auto ml-auto sm:mt-0 mt-3"
-          disabled={
-            !filterDraft.value ||
-            currentFiltersAppliedField.includes(filterDraft.field)
-          }
+          disabled={disabled}
           onClick={handleApplyFilter}
         >
           Apply
