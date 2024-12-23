@@ -146,7 +146,7 @@ const Dashboard: FC = () => {
 
   return (
     <>
-      <header className="flex bg-white sticky top-0 p-4 shadow-md">
+      <header className="flex bg-white sticky top-0 z-10 p-4 shadow-md">
         <img
           width="100px"
           height="90px"
